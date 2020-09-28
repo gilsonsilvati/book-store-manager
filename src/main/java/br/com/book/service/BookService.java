@@ -3,6 +3,7 @@ package br.com.book.service;
 import br.com.book.dto.BookDTO;
 import br.com.book.dto.MessageResponseDTO;
 import br.com.book.entity.Book;
+import br.com.book.exception.BookNotFoundException;
 import br.com.book.mapper.BookMapper;
 import br.com.book.repository.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ public class BookService {
                 .build();
     }
 
-    public BookDTO findById(Long id) {
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        return bookMapper.toDTO(optionalBook.get());
+    public BookDTO findById(Long id) throws BookNotFoundException {
+        Book book = bookRepository.findById(id).orElseThrow(() -> new BookNotFoundException(id));
+        return bookMapper.toDTO(book);
     }
 }
